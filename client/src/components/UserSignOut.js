@@ -1,8 +1,9 @@
-import React from 'react';
-import { Redirect } from 'react-router-dom';
+/** @format */
 
-export default () => {
-  return (
-    <Redirect to="/" />
-  );
-}
+import React, { useEffect } from "react";
+import { Redirect } from "react-router-dom";
+
+export default ({ context }) => {
+  useEffect(() => context.actions.signOut());
+  return <Redirect to="/" />;
+};

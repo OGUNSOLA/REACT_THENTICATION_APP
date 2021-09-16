@@ -10,9 +10,9 @@ export class Provider extends Component {
   constructor() {
     super();
     this.data = new Data();
-
+    this.cookie = Cookies.get("authenticatedUser");
     this.state = {
-      authenticatedUser: null,
+      authenticatedUser: this.cookie ? JSON.parse(this.cookie) : null,
     };
   }
 
@@ -33,11 +33,25 @@ export class Provider extends Component {
 
   signIn = async (username, password) => {
     const user = await this.data.getUser(username, password);
-
+    if (user !== null) {
+      this.setState(() => {
+        return {
+          authenticatedUser: user,
+        };
+      });
+      Cookies.set("authenticatedUser", JSON.stringify(user), { expires: 1 });
+    }
     return user;
   };
 
-  signOut = () => {};
+  signOut = () => {
+    this.setState(() => {
+      return {
+        authenticatedUser: null,
+      };
+    });
+    Cookies.remove("authenticatedUser");
+  };
 }
 
 export const Consumer = Context.Consumer;
